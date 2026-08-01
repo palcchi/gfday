@@ -2,10 +2,14 @@ const loading = document.getElementById("loading");
 const editor = document.getElementById("editor");
 
 
+/* =====================
+LOADING
+===================== */
+
 setTimeout(()=>{
 
-loading.classList.add("hide");
-editor.classList.add("show");
+if(loading) loading.classList.add("hide");
+if(editor) editor.classList.add("show");
 
 },3500);
 
@@ -13,13 +17,16 @@ editor.classList.add("show");
 
 
 
-/* CURSOR */
+
+/* =====================
+CURSOR COMMENT
+===================== */
 
 const cursor =
 document.getElementById("cursorComment");
 
 
-const comments = {
+const comments={
 
 lily:"ur favorite lily",
 
@@ -41,12 +48,8 @@ document.addEventListener(
 
 if(cursor){
 
-cursor.style.left =
-e.clientX+"px";
-
-cursor.style.top =
-e.clientY+"px";
-
+cursor.style.left=e.clientX+"px";
+cursor.style.top=e.clientY+"px";
 cursor.style.display="block";
 
 }
@@ -64,20 +67,14 @@ item.addEventListener(
 "mouseenter",
 ()=>{
 
+if(cursor){
+
 cursor.innerText =
 comments[item.dataset.flower]
 ||
 comments.default;
 
-});
-
-
-item.addEventListener(
-"mouseleave",
-()=>{
-
-cursor.innerText =
-comments.default;
+}
 
 });
 
@@ -89,7 +86,10 @@ comments.default;
 
 
 
-/* FLOWER */
+
+/* =====================
+BOUQUET
+===================== */
 
 
 const bouquetBox =
@@ -100,11 +100,15 @@ const flowerLayer =
 document.getElementById("flowerLayer");
 
 
-let selectedFlower = null;
+let selectedFlower=null;
 
-let moveable = null;
+let moveable=null;
 
 
+
+
+
+/* DESKTOP DRAG */
 
 document
 .querySelectorAll(".flower-item")
@@ -127,6 +131,107 @@ item.dataset.flower;
 
 
 
+bouquetBox.addEventListener(
+"dragover",
+e=>{
+
+e.preventDefault();
+
+});
+
+
+
+
+
+bouquetBox.addEventListener(
+"drop",
+e=>{
+
+
+e.preventDefault();
+
+
+if(!selectedFlower)
+return;
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+createFlower(
+
+selectedFlower,
+
+e.clientX-rect.left,
+
+e.clientY-rect.top
+
+);
+
+
+});
+
+
+
+
+
+
+
+
+/* MOBILE TAP */
+
+
+const touchDevice =
+window.matchMedia(
+"(pointer: coarse)"
+).matches;
+
+
+
+if(touchDevice){
+
+
+document
+.querySelectorAll(".flower-item")
+.forEach(item=>{
+
+
+item.addEventListener(
+"touchend",
+()=>{
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+
+createFlower(
+
+item.dataset.flower,
+
+rect.width/2,
+
+rect.height/2
+
+);
+
+
+});
+
+});
+
+
+}
+
+
+
+
+
+
+
+
 function createFlower(name,x,y){
 
 
@@ -136,6 +241,7 @@ document.createElement("div");
 
 flower.className =
 "flower-object";
+
 
 
 flower.innerHTML =
@@ -170,88 +276,12 @@ flower
 
 
 
-/* DESKTOP DROP */
 
 
-bouquetBox.addEventListener(
-"dragover",
-e=>{
-
-e.preventDefault();
-
-});
-
-
-
-
-bouquetBox.addEventListener(
-"drop",
-e=>{
-
-
-e.preventDefault();
-
-
-if(!selectedFlower)
-return;
-
-
-
-const rect =
-bouquetBox.getBoundingClientRect();
-
-
-
-createFlower(
-selectedFlower,
-
-e.clientX-rect.left,
-
-e.clientY-rect.top
-
-);
-
-
-});
-
-
-
-
-
-
-
-/* =====================
-MOBILE TAP FLOWER
-===================== */
-
-document
-.querySelectorAll(".flower-item")
-.forEach(item=>{
-
-item.addEventListener(
-"click",
-()=>{
-
-if(window.innerWidth > 1000)
-return;
-
-const rect =
-bouquetBox.getBoundingClientRect();
-
-createFlower(
-item.dataset.flower,
-rect.width/2,
-rect.height/2
-);
-
-});
-
-});
 /* MOVEABLE */
 
 
 function activateMoveable(target){
-
 
 
 if(moveable){
@@ -267,7 +297,7 @@ new Moveable(
 bouquetBox,
 {
 
-target:target,
+target,
 
 draggable:true,
 
@@ -291,7 +321,6 @@ renderDirections:[
 
 
 
-
 moveable.on(
 "drag",
 e=>{
@@ -303,10 +332,10 @@ e.transform;
 
 
 
-
 moveable.on(
 "resize",
 e=>{
+
 
 e.target.style.width =
 `${e.width}px`;
@@ -317,8 +346,8 @@ e.target.style.height =
 e.target.style.transform =
 e.drag.transform;
 
-});
 
+});
 
 
 
@@ -342,7 +371,9 @@ e.drag.transform;
 
 
 
-/* BUSH */
+/* =====================
+BUSH
+===================== */
 
 
 const bushButtons =
@@ -364,7 +395,7 @@ bushButtons.forEach(btn=>{
 btn.onclick=()=>{
 
 
-const id =
+let id =
 btn.dataset.id;
 
 
@@ -379,10 +410,9 @@ bushFront.src =
 
 
 
-bushButtons.forEach(b=>
-b.classList.remove("active")
+bushButtons.forEach(x=>
+x.classList.remove("active")
 );
-
 
 
 btn.classList.add("active");
@@ -400,7 +430,9 @@ btn.classList.add("active");
 
 
 
-/* EXPORT */
+/* =====================
+EXPORT PNG
+===================== */
 
 
 const finishButton =
@@ -416,16 +448,12 @@ document.getElementById("resultImage");
 
 
 
-
 finishButton.onclick =
 async()=>{
 
 
-if(moveable){
-
+if(moveable)
 moveable.destroy();
-
-}
 
 
 
@@ -441,16 +469,16 @@ scale:3
 
 
 resultImage.src =
-canvas.toDataURL("image/png");
+canvas.toDataURL(
+"image/png"
+);
 
 
 
-resultScreen.style.display =
-"flex";
+resultScreen.style.display="flex";
 
 
 };
-
 
 
 
@@ -461,19 +489,13 @@ document
 .onclick=()=>{
 
 
-const link =
-document.createElement("a");
+let a=document.createElement("a");
 
+a.download="bouquet.png";
 
-link.download =
-"bouquet.png";
+a.href=resultImage.src;
 
-
-link.href =
-resultImage.src;
-
-
-link.click();
+a.click();
 
 
 };
@@ -486,7 +508,9 @@ link.click();
 
 
 
-/* CAMERA */
+/* =====================
+CAMERA
+===================== */
 
 
 const cameraButton =
@@ -527,12 +551,12 @@ cameraButton.onclick =
 async()=>{
 
 
-cameraScreen.style.display =
-"block";
+cameraScreen.style.display="block";
 
 
 cameraBouquet.src =
 resultImage.src;
+
 
 
 
@@ -554,7 +578,6 @@ keepRatio:true,
 origin:false
 
 });
-
 
 
 
@@ -598,8 +621,7 @@ e.drag.transform;
 
 
 cameraStream =
-await navigator.mediaDevices.getUserMedia(
-{
+await navigator.mediaDevices.getUserMedia({
 
 video:{
 facingMode:"user"
@@ -608,6 +630,7 @@ facingMode:"user"
 audio:false
 
 });
+
 
 
 cameraVideo.srcObject =
@@ -626,8 +649,7 @@ closeCamera.onclick =
 ()=>{
 
 
-cameraScreen.style.display =
-"none";
+cameraScreen.style.display="none";
 
 
 if(cameraStream){
@@ -648,7 +670,9 @@ cameraStream
 
 
 
-/* CAPTURE */
+/* =====================
+CAMERA CAPTURE
+===================== */
 
 
 captureButton.onclick =
@@ -674,12 +698,20 @@ cameraVideo.videoHeight;
 
 
 ctx.drawImage(
+
 cameraVideo,
+
 0,
+
 0,
+
 canvas.width,
+
 canvas.height
+
 );
+
+
 
 
 
@@ -714,26 +746,22 @@ rect.height*scaleY
 
 
 
-const image =
+
+let img =
 canvas.toDataURL(
 "image/png"
 );
 
 
 
-const link =
+let a =
 document.createElement("a");
 
+a.download="bouquet-camera.png";
 
-link.download =
-"bouquet-camera.png";
+a.href=img;
 
-
-link.href =
-image;
-
-
-link.click();
+a.click();
 
 
 };
