@@ -2,14 +2,10 @@ const loading = document.getElementById("loading");
 const editor = document.getElementById("editor");
 
 
-/* =====================
-LOADING
-===================== */
-
 setTimeout(()=>{
 
-if(loading) loading.classList.add("hide");
-if(editor) editor.classList.add("show");
+loading.classList.add("hide");
+editor.classList.add("show");
 
 },3500);
 
@@ -17,16 +13,13 @@ if(editor) editor.classList.add("show");
 
 
 
-
-/* =====================
-CURSOR COMMENT
-===================== */
+/* CURSOR */
 
 const cursor =
 document.getElementById("cursorComment");
 
 
-const comments={
+const comments = {
 
 lily:"ur favorite lily",
 
@@ -48,8 +41,12 @@ document.addEventListener(
 
 if(cursor){
 
-cursor.style.left=e.clientX+"px";
-cursor.style.top=e.clientY+"px";
+cursor.style.left =
+e.clientX+"px";
+
+cursor.style.top =
+e.clientY+"px";
+
 cursor.style.display="block";
 
 }
@@ -67,14 +64,20 @@ item.addEventListener(
 "mouseenter",
 ()=>{
 
-if(cursor){
-
 cursor.innerText =
 comments[item.dataset.flower]
 ||
 comments.default;
 
-}
+});
+
+
+item.addEventListener(
+"mouseleave",
+()=>{
+
+cursor.innerText =
+comments.default;
 
 });
 
@@ -86,10 +89,7 @@ comments.default;
 
 
 
-
-/* =====================
-BOUQUET
-===================== */
+/* FLOWER */
 
 
 const bouquetBox =
@@ -100,15 +100,11 @@ const flowerLayer =
 document.getElementById("flowerLayer");
 
 
-let selectedFlower=null;
+let selectedFlower = null;
 
-let moveable=null;
-
-
+let moveable = null;
 
 
-
-/* DESKTOP DRAG */
 
 document
 .querySelectorAll(".flower-item")
@@ -131,107 +127,6 @@ item.dataset.flower;
 
 
 
-bouquetBox.addEventListener(
-"dragover",
-e=>{
-
-e.preventDefault();
-
-});
-
-
-
-
-
-bouquetBox.addEventListener(
-"drop",
-e=>{
-
-
-e.preventDefault();
-
-
-if(!selectedFlower)
-return;
-
-
-const rect =
-bouquetBox.getBoundingClientRect();
-
-
-createFlower(
-
-selectedFlower,
-
-e.clientX-rect.left,
-
-e.clientY-rect.top
-
-);
-
-
-});
-
-
-
-
-
-
-
-
-/* MOBILE TAP */
-
-
-const touchDevice =
-window.matchMedia(
-"(pointer: coarse)"
-).matches;
-
-
-
-if(touchDevice){
-
-
-document
-.querySelectorAll(".flower-item")
-.forEach(item=>{
-
-
-item.addEventListener(
-"touchend",
-()=>{
-
-
-const rect =
-bouquetBox.getBoundingClientRect();
-
-
-
-createFlower(
-
-item.dataset.flower,
-
-rect.width/2,
-
-rect.height/2
-
-);
-
-
-});
-
-});
-
-
-}
-
-
-
-
-
-
-
-
 function createFlower(name,x,y){
 
 
@@ -241,7 +136,6 @@ document.createElement("div");
 
 flower.className =
 "flower-object";
-
 
 
 flower.innerHTML =
@@ -276,12 +170,149 @@ flower
 
 
 
+/* DESKTOP DROP */
+
+
+bouquetBox.addEventListener(
+"dragover",
+e=>{
+
+e.preventDefault();
+
+});
+
+
+
+
+bouquetBox.addEventListener(
+"drop",
+e=>{
+
+
+e.preventDefault();
+
+
+if(!selectedFlower)
+return;
+
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+
+createFlower(
+selectedFlower,
+
+e.clientX-rect.left,
+
+e.clientY-rect.top
+
+);
+
+
+});
+
+
+
+
+
+
+
+/* MOBILE TOUCH */
+
+
+let touchFlower=null;
+
+
+
+document
+.querySelectorAll(".flower-item")
+.forEach(item=>{
+
+
+item.addEventListener(
+"touchstart",
+e=>{
+
+
+touchFlower =
+item.dataset.flower;
+
+
+},
+{
+passive:true
+});
+
+item.addEventListener(
+"touchend",
+e=>{
+
+
+if(!touchFlower)
+return;
+
+
+
+const touch =
+e.changedTouches[0];
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+
+const x =
+touch.clientX-rect.left;
+
+
+const y =
+touch.clientY-rect.top;
+
+
+
+if(
+x>0 &&
+y>0 &&
+x<rect.width &&
+y<rect.height
+){
+
+
+createFlower(
+touchFlower,
+x,
+y
+);
+
+
+}
+
+
+
+touchFlower=null;
+
+
+});
+
+
+});
+
+
+
+
+
+
 
 
 /* MOVEABLE */
 
 
 function activateMoveable(target){
+
 
 
 if(moveable){
@@ -297,7 +328,7 @@ new Moveable(
 bouquetBox,
 {
 
-target,
+target:target,
 
 draggable:true,
 
@@ -321,6 +352,7 @@ renderDirections:[
 
 
 
+
 moveable.on(
 "drag",
 e=>{
@@ -332,10 +364,10 @@ e.transform;
 
 
 
+
 moveable.on(
 "resize",
 e=>{
-
 
 e.target.style.width =
 `${e.width}px`;
@@ -346,8 +378,8 @@ e.target.style.height =
 e.target.style.transform =
 e.drag.transform;
 
-
 });
+
 
 
 
@@ -371,9 +403,7 @@ e.drag.transform;
 
 
 
-/* =====================
-BUSH
-===================== */
+/* BUSH */
 
 
 const bushButtons =
@@ -395,7 +425,7 @@ bushButtons.forEach(btn=>{
 btn.onclick=()=>{
 
 
-let id =
+const id =
 btn.dataset.id;
 
 
@@ -410,9 +440,10 @@ bushFront.src =
 
 
 
-bushButtons.forEach(x=>
-x.classList.remove("active")
+bushButtons.forEach(b=>
+b.classList.remove("active")
 );
+
 
 
 btn.classList.add("active");
@@ -430,9 +461,7 @@ btn.classList.add("active");
 
 
 
-/* =====================
-EXPORT PNG
-===================== */
+/* EXPORT */
 
 
 const finishButton =
@@ -448,12 +477,16 @@ document.getElementById("resultImage");
 
 
 
+
 finishButton.onclick =
 async()=>{
 
 
-if(moveable)
+if(moveable){
+
 moveable.destroy();
+
+}
 
 
 
@@ -469,16 +502,16 @@ scale:3
 
 
 resultImage.src =
-canvas.toDataURL(
-"image/png"
-);
+canvas.toDataURL("image/png");
 
 
 
-resultScreen.style.display="flex";
+resultScreen.style.display =
+"flex";
 
 
 };
+
 
 
 
@@ -489,13 +522,19 @@ document
 .onclick=()=>{
 
 
-let a=document.createElement("a");
+const link =
+document.createElement("a");
 
-a.download="bouquet.png";
 
-a.href=resultImage.src;
+link.download =
+"bouquet.png";
 
-a.click();
+
+link.href =
+resultImage.src;
+
+
+link.click();
 
 
 };
@@ -508,9 +547,7 @@ a.click();
 
 
 
-/* =====================
-CAMERA
-===================== */
+/* CAMERA */
 
 
 const cameraButton =
@@ -551,12 +588,12 @@ cameraButton.onclick =
 async()=>{
 
 
-cameraScreen.style.display="block";
+cameraScreen.style.display =
+"block";
 
 
 cameraBouquet.src =
 resultImage.src;
-
 
 
 
@@ -578,6 +615,7 @@ keepRatio:true,
 origin:false
 
 });
+
 
 
 
@@ -621,7 +659,8 @@ e.drag.transform;
 
 
 cameraStream =
-await navigator.mediaDevices.getUserMedia({
+await navigator.mediaDevices.getUserMedia(
+{
 
 video:{
 facingMode:"user"
@@ -630,7 +669,6 @@ facingMode:"user"
 audio:false
 
 });
-
 
 
 cameraVideo.srcObject =
@@ -649,7 +687,8 @@ closeCamera.onclick =
 ()=>{
 
 
-cameraScreen.style.display="none";
+cameraScreen.style.display =
+"none";
 
 
 if(cameraStream){
@@ -670,9 +709,7 @@ cameraStream
 
 
 
-/* =====================
-CAMERA CAPTURE
-===================== */
+/* CAPTURE */
 
 
 captureButton.onclick =
@@ -698,20 +735,12 @@ cameraVideo.videoHeight;
 
 
 ctx.drawImage(
-
 cameraVideo,
-
 0,
-
 0,
-
 canvas.width,
-
 canvas.height
-
 );
-
-
 
 
 
@@ -746,22 +775,26 @@ rect.height*scaleY
 
 
 
-
-let img =
+const image =
 canvas.toDataURL(
 "image/png"
 );
 
 
 
-let a =
+const link =
 document.createElement("a");
 
-a.download="bouquet-camera.png";
 
-a.href=img;
+link.download =
+"bouquet-camera.png";
 
-a.click();
+
+link.href =
+image;
+
+
+link.click();
 
 
 };
