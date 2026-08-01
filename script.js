@@ -1,0 +1,719 @@
+const loading = document.getElementById("loading");
+const editor = document.getElementById("editor");
+
+setTimeout(()=>{
+
+loading.classList.add("hide");
+editor.classList.add("show");
+
+},3500);
+
+
+
+
+const cursor =
+document.getElementById("cursorComment");
+
+
+const comments = {
+
+lily:"ur favorite lily",
+
+sunflower:"ihh bunga matahari aku",
+
+rose:"yaelah pasaran",
+
+orchid:"keren orchid",
+
+default:"pilih bunga nya sayang"
+
+};
+
+
+
+document.addEventListener(
+"mousemove",
+(e)=>{
+
+cursor.style.left =
+e.clientX+"px";
+
+cursor.style.top =
+e.clientY+"px";
+
+cursor.style.display="block";
+
+});
+
+
+
+document
+.querySelectorAll(".flower-item")
+.forEach(item=>{
+
+
+item.addEventListener(
+"mouseenter",
+()=>{
+
+cursor.innerText =
+comments[item.dataset.flower]
+||
+comments.default;
+
+});
+
+
+item.addEventListener(
+"mouseleave",
+()=>{
+
+cursor.innerText =
+comments.default;
+
+});
+
+
+});
+
+
+let selectedFlower = null;
+
+let selectedObject = null;
+
+
+document
+.querySelectorAll(".flower-item")
+.forEach(item=>{
+
+
+item.addEventListener(
+"dragstart",
+()=>{
+
+
+selectedFlower =
+item.dataset.flower;
+
+
+});
+
+
+});
+
+
+
+const bouquetBox =
+document.getElementById("bouquetBox");
+
+
+const flowerLayer =
+document.getElementById("flowerLayer");
+
+
+
+
+
+bouquetBox.addEventListener(
+"dragover",
+(e)=>{
+
+e.preventDefault();
+
+});
+
+
+
+
+
+bouquetBox.addEventListener(
+"drop",
+(e)=>{
+
+
+e.preventDefault();
+
+
+
+if(!selectedFlower)
+return;
+
+
+
+const flower =
+document.createElement("div");
+
+
+flower.className =
+"flower-object";
+
+
+flower.innerHTML =
+`
+<img src="assets/flowers/${selectedFlower}.png">
+`;
+
+
+
+flower.style.left =
+"220px";
+
+
+flower.style.top =
+"200px";
+
+
+
+flowerLayer.appendChild(
+flower
+);
+
+
+
+activateMoveable(
+flower
+);
+
+
+});
+
+
+
+
+
+
+
+/* =====================
+MOVEABLE FLOWER
+===================== */
+
+
+let moveable = null;
+
+
+
+function activateMoveable(target){
+
+
+selectedObject =
+target;
+
+
+
+if(moveable){
+
+moveable.destroy();
+
+}
+
+
+
+moveable =
+new Moveable(
+bouquetBox,
+{
+
+target:target,
+
+draggable:true,
+
+resizable:true,
+
+rotatable:true,
+
+keepRatio:true,
+
+origin:false,
+
+renderDirections:[
+"nw",
+"ne",
+"sw",
+"se"
+]
+
+});
+
+
+
+
+moveable.on(
+"drag",
+e=>{
+
+e.target.style.transform =
+e.transform;
+
+});
+
+
+
+
+
+moveable.on(
+"resize",
+e=>{
+
+
+e.target.style.width =
+`${e.width}px`;
+
+
+e.target.style.height =
+`${e.height}px`;
+
+
+e.target.style.transform =
+e.drag.transform;
+
+
+});
+
+
+
+
+
+moveable.on(
+"rotate",
+e=>{
+
+
+e.target.style.transform =
+e.drag.transform;
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================
+BUSH SWITCH
+===================== */
+
+
+const bushButtons =
+document.querySelectorAll(".bush-btn");
+
+
+const bushBack =
+document.getElementById("bushBack");
+
+
+const bushFront =
+document.getElementById("bushFront");
+
+
+
+bushButtons.forEach(btn=>{
+
+
+btn.onclick=()=>{
+
+
+const id =
+btn.dataset.id;
+
+
+
+bushBack.src =
+`assets/flowers/bush/bush-${id}.png`;
+
+
+
+bushFront.src =
+`assets/flowers/bush/bush-${id}-top.png`;
+
+
+
+bushButtons.forEach(x=>
+x.classList.remove("active")
+);
+
+
+btn.classList.add("active");
+
+
+};
+
+
+});
+
+
+
+
+
+
+
+/* =====================
+EXPORT PNG
+===================== */
+
+
+const finishButton =
+document.getElementById("finishButton");
+
+
+const resultScreen =
+document.getElementById("resultScreen");
+
+
+const resultImage =
+document.getElementById("resultImage");
+
+
+
+finishButton.onclick =
+async()=>{
+
+
+if(moveable){
+
+moveable.destroy();
+
+}
+
+
+
+const canvas =
+await html2canvas(
+bouquetBox,
+{
+
+backgroundColor:null,
+
+scale:3
+
+});
+
+
+
+resultImage.src =
+canvas.toDataURL("image/png");
+
+
+
+resultScreen.style.display =
+"flex";
+
+
+};
+
+
+
+
+
+
+const downloadButton =
+document.getElementById("downloadButton");
+
+
+
+downloadButton.onclick =
+()=>{
+
+
+const link =
+document.createElement("a");
+
+
+link.download =
+"bouquet.png";
+
+
+link.href =
+resultImage.src;
+
+
+link.click();
+
+
+};
+
+
+
+
+
+
+
+
+/* =====================
+CAMERA
+===================== */
+
+
+const cameraButton =
+document.getElementById("cameraButton");
+
+
+const cameraScreen =
+document.getElementById("cameraScreen");
+
+
+const cameraVideo =
+document.getElementById("cameraVideo");
+
+
+const cameraBouquet =
+document.getElementById("cameraBouquet");
+
+
+const captureButton =
+document.getElementById("captureButton");
+
+
+const closeCamera =
+document.getElementById("closeCamera");
+
+
+
+let cameraStream = null;
+
+let cameraMoveable = null;
+
+
+
+
+
+cameraButton.onclick =
+async()=>{
+
+
+cameraScreen.style.display =
+"block";
+
+
+cameraBouquet.src =
+resultImage.src;
+
+
+
+if(cameraMoveable){
+
+cameraMoveable.destroy();
+
+}
+
+
+
+cameraMoveable =
+new Moveable(
+cameraScreen,
+{
+
+target:cameraBouquet,
+
+draggable:true,
+
+resizable:true,
+
+rotatable:true,
+
+keepRatio:true,
+
+origin:false
+
+});
+
+
+
+
+
+cameraMoveable.on(
+"drag",
+e=>{
+
+e.target.style.transform =
+e.transform;
+
+});
+
+
+
+cameraMoveable.on(
+"resize",
+e=>{
+
+
+e.target.style.width =
+`${e.width}px`;
+
+
+e.target.style.transform =
+e.drag.transform;
+
+
+});
+
+
+
+cameraMoveable.on(
+"rotate",
+e=>{
+
+e.target.style.transform =
+e.drag.transform;
+
+});
+
+
+
+
+
+cameraStream =
+await navigator.mediaDevices.getUserMedia(
+{
+
+video:{
+facingMode:"user"
+},
+
+audio:false
+
+});
+
+
+
+cameraVideo.srcObject =
+cameraStream;
+
+
+};
+
+
+
+
+
+
+
+closeCamera.onclick =
+()=>{
+
+
+cameraScreen.style.display =
+"none";
+
+
+
+if(cameraStream){
+
+cameraStream
+.getTracks()
+.forEach(track=>track.stop());
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+/* =====================
+CAPTURE CAMERA
+===================== */
+
+
+captureButton.onclick =
+()=>{
+
+
+const canvas =
+document.getElementById("captureCanvas");
+
+
+const ctx =
+canvas.getContext("2d");
+
+
+
+canvas.width =
+cameraVideo.videoWidth;
+
+
+canvas.height =
+cameraVideo.videoHeight;
+
+
+
+ctx.drawImage(
+cameraVideo,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+
+
+
+const rect =
+cameraBouquet.getBoundingClientRect();
+
+
+
+const scaleX =
+canvas.width /
+window.innerWidth;
+
+
+const scaleY =
+canvas.height /
+window.innerHeight;
+
+
+
+
+ctx.drawImage(
+
+cameraBouquet,
+
+rect.left * scaleX,
+
+rect.top * scaleY,
+
+rect.width * scaleX,
+
+rect.height * scaleY
+
+);
+
+
+
+
+
+const image =
+canvas.toDataURL(
+"image/png"
+);
+
+
+
+const link =
+document.createElement("a");
+
+
+link.download =
+"bouquet-camera.png";
+
+
+link.href =
+image;
+
+
+link.click();
+
+
+};

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Buat Kaek</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<section id="loading">
+
+<div class="loading-content">
+
+<p>Paypal said</p>
+
+<h1>
+Happy<br>
+Girlfriend Day
+</h1>
+
+<span>
+Keyla Kaek My Sayang #1 Hater FR
+</span>
+
+<div class="loading-line"></div>
+
+</div>
+
+</section>
+
+
+
+
+
+<section id="editor">
+
+
+<div id="cursorComment">
+pilih bunga nya sayang
+</div>
+
+
+
+<header>
+
+<h1>
+Buat Kaek
+</h1>
+
+<p>
+pilih bunga sama bush nya xixi
+</p>
+
+</header>
+
+
+
+
+
+<div class="workspace">
+
+
+
+<div class="bouquet-wrapper">
+
+
+<div class="bouquet-box" id="bouquetBox">
+
+
+<img
+id="bushBack"
+src="assets/flowers/bush/bush-1.png">
+
+
+<div id="flowerLayer"></div>
+
+
+<img
+id="bushFront"
+src="assets/flowers/bush/bush-1-top.png">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="side-panel">
+
+
+<div class="bush-control">
+
+
+<button class="bush-btn active" data-id="1">
+01
+</button>
+
+
+<button class="bush-btn" data-id="2">
+02
+</button>
+
+
+<button class="bush-btn" data-id="3">
+03
+</button>
+
+
+</div>
+
+
+
+
+
+<div class="flower-panel">
+
+
+<div class="flower-item" draggable="true" data-flower="anemone">
+<img src="assets/flowers/anemone.png">
+<span>Anemone</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="carnation">
+<img src="assets/flowers/carnation.png">
+<span>Carnation</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="dahlia">
+<img src="assets/flowers/dahlia.png">
+<span>Dahlia</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="daisy">
+<img src="assets/flowers/daisy.png">
+<span>Daisy</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="lily">
+<img src="assets/flowers/lily.png">
+<span>Lily</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="orchid">
+<img src="assets/flowers/orchid.png">
+<span>Orchid</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="peony">
+<img src="assets/flowers/peony.png">
+<span>Peony</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="ranunculus">
+<img src="assets/flowers/ranunculus.png">
+<span>Ranunculus</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="rose">
+<img src="assets/flowers/rose.png">
+<span>Rose</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="sunflower">
+<img src="assets/flowers/sunflower.png">
+<span>Sunflower</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="tulip">
+<img src="assets/flowers/tulip.png">
+<span>Tulip</span>
+</div>
+
+
+<div class="flower-item" draggable="true" data-flower="zinnia">
+<img src="assets/flowers/zinnia.png">
+<span>Zinnia</span>
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<button id="finishButton">
+Syudah
+</button>
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+<section id="resultScreen">
+<section id="cameraScreen">
+
+<h1 id="cameraTitle">
+HAPPY<br>
+GIRLFRIEND DAY
+</h1>
+
+<button id="closeCamera">
+×
+</button>
+
+
+<video 
+id="cameraVideo" 
+autoplay 
+playsinline>
+</video>
+
+
+
+<img 
+id="cameraBouquet">
+
+
+
+
+
+<div class="camera-controls">
+
+<button id="captureButton">
+Capture
+</button>
+
+</div>
+
+
+
+<canvas id="captureCanvas"></canvas>
+
+
+</section>
+
+<h1>
+inih bouquet nya sayang
+</h1>
+
+
+<img id="resultImage">
+
+
+
+<div class="result-buttons">
+
+
+<button id="downloadButton">
+Download
+</button>
+
+
+<button id="cameraButton">
+Camera?
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<script src="https://unpkg.com/moveable/dist/moveable.min.js"></script>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
