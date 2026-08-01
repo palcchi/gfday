@@ -1,6 +1,7 @@
 const loading = document.getElementById("loading");
 const editor = document.getElementById("editor");
 
+
 setTimeout(()=>{
 
 loading.classList.add("hide");
@@ -10,6 +11,9 @@ editor.classList.add("show");
 
 
 
+
+
+/* CURSOR */
 
 const cursor =
 document.getElementById("cursorComment");
@@ -35,6 +39,8 @@ document.addEventListener(
 "mousemove",
 (e)=>{
 
+if(cursor){
+
 cursor.style.left =
 e.clientX+"px";
 
@@ -42,6 +48,8 @@ cursor.style.top =
 e.clientY+"px";
 
 cursor.style.display="block";
+
+}
 
 });
 
@@ -77,9 +85,25 @@ comments.default;
 });
 
 
+
+
+
+
+/* FLOWER */
+
+
+const bouquetBox =
+document.getElementById("bouquetBox");
+
+
+const flowerLayer =
+document.getElementById("flowerLayer");
+
+
 let selectedFlower = null;
 
-let selectedObject = null;
+let moveable = null;
+
 
 
 document
@@ -91,11 +115,9 @@ item.addEventListener(
 "dragstart",
 ()=>{
 
-
 selectedFlower =
 item.dataset.flower;
 
-
 });
 
 
@@ -103,41 +125,9 @@ item.dataset.flower;
 
 
 
-const bouquetBox =
-document.getElementById("bouquetBox");
 
 
-const flowerLayer =
-document.getElementById("flowerLayer");
-
-
-
-
-
-bouquetBox.addEventListener(
-"dragover",
-(e)=>{
-
-e.preventDefault();
-
-});
-
-
-
-
-
-bouquetBox.addEventListener(
-"drop",
-(e)=>{
-
-
-e.preventDefault();
-
-
-
-if(!selectedFlower)
-return;
-
+function createFlower(name,x,y){
 
 
 const flower =
@@ -150,17 +140,16 @@ flower.className =
 
 flower.innerHTML =
 `
-<img src="assets/flowers/${selectedFlower}.png">
+<img src="assets/flowers/${name}.png">
 `;
 
 
 
 flower.style.left =
-"220px";
-
+`${x-60}px`;
 
 flower.style.top =
-"200px";
+`${y-60}px`;
 
 
 
@@ -175,6 +164,54 @@ flower
 );
 
 
+}
+
+
+
+
+
+/* DESKTOP DROP */
+
+
+bouquetBox.addEventListener(
+"dragover",
+e=>{
+
+e.preventDefault();
+
+});
+
+
+
+
+bouquetBox.addEventListener(
+"drop",
+e=>{
+
+
+e.preventDefault();
+
+
+if(!selectedFlower)
+return;
+
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+
+createFlower(
+selectedFlower,
+
+e.clientX-rect.left,
+
+e.clientY-rect.top
+
+);
+
+
 });
 
 
@@ -183,20 +220,100 @@ flower
 
 
 
-/* =====================
-MOVEABLE FLOWER
-===================== */
+/* MOBILE TOUCH */
 
 
-let moveable = null;
+let touchFlower=null;
 
+
+
+document
+.querySelectorAll(".flower-item")
+.forEach(item=>{
+
+
+item.addEventListener(
+"touchstart",
+e=>{
+
+e.preventDefault();
+
+touchFlower =
+item.dataset.flower;
+
+
+},
+{
+passive:false
+});
+
+
+item.addEventListener(
+"touchend",
+e=>{
+
+
+if(!touchFlower)
+return;
+
+
+
+const touch =
+e.changedTouches[0];
+
+
+const rect =
+bouquetBox.getBoundingClientRect();
+
+
+
+const x =
+touch.clientX-rect.left;
+
+
+const y =
+touch.clientY-rect.top;
+
+
+
+if(
+x>0 &&
+y>0 &&
+x<rect.width &&
+y<rect.height
+){
+
+
+createFlower(
+touchFlower,
+x,
+y
+);
+
+
+}
+
+
+
+touchFlower=null;
+
+
+});
+
+
+});
+
+
+
+
+
+
+
+
+/* MOVEABLE */
 
 
 function activateMoveable(target){
-
-
-selectedObject =
-target;
 
 
 
@@ -237,6 +354,7 @@ renderDirections:[
 
 
 
+
 moveable.on(
 "drag",
 e=>{
@@ -249,26 +367,20 @@ e.transform;
 
 
 
-
 moveable.on(
 "resize",
 e=>{
 
-
 e.target.style.width =
 `${e.width}px`;
-
 
 e.target.style.height =
 `${e.height}px`;
 
-
 e.target.style.transform =
 e.drag.transform;
 
-
 });
-
 
 
 
@@ -277,10 +389,8 @@ moveable.on(
 "rotate",
 e=>{
 
-
 e.target.style.transform =
 e.drag.transform;
-
 
 });
 
@@ -294,9 +404,8 @@ e.drag.transform;
 
 
 
-/* =====================
-BUSH SWITCH
-===================== */
+
+/* BUSH */
 
 
 const bushButtons =
@@ -333,9 +442,10 @@ bushFront.src =
 
 
 
-bushButtons.forEach(x=>
-x.classList.remove("active")
+bushButtons.forEach(b=>
+b.classList.remove("active")
 );
+
 
 
 btn.classList.add("active");
@@ -352,9 +462,8 @@ btn.classList.add("active");
 
 
 
-/* =====================
-EXPORT PNG
-===================== */
+
+/* EXPORT */
 
 
 const finishButton =
@@ -367,6 +476,7 @@ document.getElementById("resultScreen");
 
 const resultImage =
 document.getElementById("resultImage");
+
 
 
 
@@ -386,12 +496,10 @@ const canvas =
 await html2canvas(
 bouquetBox,
 {
-
 backgroundColor:null,
-
 scale:3
-
-});
+}
+);
 
 
 
@@ -411,13 +519,9 @@ resultScreen.style.display =
 
 
 
-const downloadButton =
-document.getElementById("downloadButton");
-
-
-
-downloadButton.onclick =
-()=>{
+document
+.getElementById("downloadButton")
+.onclick=()=>{
 
 
 const link =
@@ -444,9 +548,8 @@ link.click();
 
 
 
-/* =====================
-CAMERA
-===================== */
+
+/* CAMERA */
 
 
 const cameraButton =
@@ -474,9 +577,10 @@ document.getElementById("closeCamera");
 
 
 
-let cameraStream = null;
+let cameraStream=null;
 
-let cameraMoveable = null;
+let cameraMoveable=null;
+
 
 
 
@@ -492,14 +596,6 @@ cameraScreen.style.display =
 
 cameraBouquet.src =
 resultImage.src;
-
-
-
-if(cameraMoveable){
-
-cameraMoveable.destroy();
-
-}
 
 
 
@@ -541,14 +637,11 @@ cameraMoveable.on(
 "resize",
 e=>{
 
-
 e.target.style.width =
 `${e.width}px`;
 
-
 e.target.style.transform =
 e.drag.transform;
-
 
 });
 
@@ -580,7 +673,6 @@ audio:false
 });
 
 
-
 cameraVideo.srcObject =
 cameraStream;
 
@@ -601,7 +693,6 @@ cameraScreen.style.display =
 "none";
 
 
-
 if(cameraStream){
 
 cameraStream
@@ -620,9 +711,7 @@ cameraStream
 
 
 
-/* =====================
-CAPTURE CAMERA
-===================== */
+/* CAPTURE */
 
 
 captureButton.onclick =
@@ -657,22 +746,17 @@ canvas.height
 
 
 
-
-
 const rect =
 cameraBouquet.getBoundingClientRect();
 
 
 
 const scaleX =
-canvas.width /
-window.innerWidth;
+canvas.width/window.innerWidth;
 
 
 const scaleY =
-canvas.height /
-window.innerHeight;
-
+canvas.height/window.innerHeight;
 
 
 
@@ -680,16 +764,15 @@ ctx.drawImage(
 
 cameraBouquet,
 
-rect.left * scaleX,
+rect.left*scaleX,
 
-rect.top * scaleY,
+rect.top*scaleY,
 
-rect.width * scaleX,
+rect.width*scaleX,
 
-rect.height * scaleY
+rect.height*scaleY
 
 );
-
 
 
 
