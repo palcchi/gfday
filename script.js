@@ -220,96 +220,33 @@ e.clientY-rect.top
 
 
 
-/* MOBILE TOUCH */
-
-
-let touchFlower=null;
-
-
+/* =====================
+MOBILE TAP FLOWER
+===================== */
 
 document
 .querySelectorAll(".flower-item")
 .forEach(item=>{
 
-
 item.addEventListener(
-"touchstart",
-e=>{
+"click",
+()=>{
 
-e.preventDefault();
-
-touchFlower =
-item.dataset.flower;
-
-
-},
-{
-passive:false
-});
-
-
-item.addEventListener(
-"touchend",
-e=>{
-
-
-if(!touchFlower)
+if(window.innerWidth > 1000)
 return;
-
-
-
-const touch =
-e.changedTouches[0];
-
 
 const rect =
 bouquetBox.getBoundingClientRect();
 
-
-
-const x =
-touch.clientX-rect.left;
-
-
-const y =
-touch.clientY-rect.top;
-
-
-
-if(
-x>0 &&
-y>0 &&
-x<rect.width &&
-y<rect.height
-){
-
-
 createFlower(
-touchFlower,
-x,
-y
+item.dataset.flower,
+rect.width/2,
+rect.height/2
 );
 
-
-}
-
-
-
-touchFlower=null;
-
-
 });
 
-
 });
-
-
-
-
-
-
-
-
 /* MOVEABLE */
 
 
