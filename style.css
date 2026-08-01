@@ -388,10 +388,22 @@ gap:12px;
 
 overflow:auto;
 
+-webkit-overflow-scrolling:touch;
+
+touch-action:pan-x;
+
 }
 
 
+.flower-item{
 
+touch-action:pan-x;
+
+user-select:none;
+
+-webkit-user-select:none;
+
+}
 
 
 .flower-item{
