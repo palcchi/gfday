@@ -957,17 +957,43 @@ width:100%;
 /* CAMERA MOBILE */
 
 
+/* CAMERA TITLE OVERLAY */
+
 #cameraTitle{
 
-top:-20px;
+position:absolute;
 
-font-size:52px;
+top:-35px;
 
-line-height:.85;
+left:50%;
 
-letter-spacing:-2px;
+transform:translateX(-50%);
 
-width:150%;
+width:120%;
+
+margin:0;
+
+padding:0;
+
+font-size:clamp(55px,12vw,120px);
+
+font-weight:600;
+
+line-height:.8;
+
+letter-spacing:-5px;
+
+text-align:center;
+
+color:white;
+
+background:transparent!important;
+
+z-index:20;
+
+pointer-events:none;
+
+text-shadow:none;
 
 }
 
