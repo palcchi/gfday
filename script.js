@@ -788,18 +788,24 @@ ctx.fillStyle = "#ffffff";
 
 ctx.textAlign = "center";
 
-ctx.font = `bold ${canvas.width * 0.09}px Inter`;
+ctx.textBaseline = "top";
 
+const titleSize = canvas.width * 0.09;
+
+ctx.font = `700 ${titleSize}px Inter, Arial, sans-serif`;
+
+// HAPPY
 ctx.fillText(
 "HAPPY",
-canvas.width/2,
-canvas.height*0.04
+canvas.width / 2,
+canvas.height * 0.045
 );
 
+// GIRLFRIEND DAY
 ctx.fillText(
 "GIRLFRIEND DAY",
-canvas.width/2,
-canvas.height*0.11
+canvas.width / 2,
+canvas.height * 0.14
 );
 
 ctx.restore();
