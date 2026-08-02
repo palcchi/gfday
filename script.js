@@ -734,6 +734,12 @@ cameraVideo.videoHeight;
 
 
 
+ctx.save();
+
+ctx.translate(canvas.width,0);
+
+ctx.scale(-1,1);
+
 ctx.drawImage(
 cameraVideo,
 0,
@@ -741,6 +747,8 @@ cameraVideo,
 canvas.width,
 canvas.height
 );
+
+ctx.restore();
 
 
 
