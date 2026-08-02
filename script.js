@@ -792,14 +792,14 @@ ctx.font = `bold ${canvas.width * 0.09}px Inter`;
 
 ctx.fillText(
 "HAPPY",
-canvas.width / 2,
-canvas.height * 0.09
+canvas.width/2,
+canvas.height*0.04
 );
 
 ctx.fillText(
 "GIRLFRIEND DAY",
-canvas.width / 2,
-canvas.height * 0.16
+canvas.width/2,
+canvas.height*0.11
 );
 
 ctx.restore();
