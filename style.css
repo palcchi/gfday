@@ -611,41 +611,40 @@ z-index:1;
 
 
 
-/* TEXT OVERLAY CAMERA */
 
 #cameraTitle{
 
 position:absolute;
 
-top:-45px;
+top:20px;
 
 left:50%;
 
 transform:translateX(-50%);
 
-width:140%;
+width:100%;
 
 margin:0;
 
 padding:0;
 
-color:white;
+color:#fff;
 
-font-size:clamp(55px,14vw,120px);
+font-size:clamp(56px,12vw,110px);
 
-font-weight:600;
+font-weight:700;
 
-line-height:.8;
+line-height:.95;
 
-letter-spacing:-5px;
+letter-spacing:-3px;
 
 text-align:center;
 
 background:transparent;
 
-z-index:5;
-
 pointer-events:none;
+
+z-index:20;
 
 }
 
